@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://icons8.com/icon/8Zt1Pe61kq3X/budget" type="image/x-icon">
+    <title>Criar Orçamento</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1, h2 {
+            color: #0098da;
+        }
+        
+        .search-icon {
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+        
+        .table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .table thead th {
+            background-color: #0098da;
+            color: #fff;
+            border: none;
+        }
+        
+        .table tbody td {
+            border: none;
+            outline: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .form-control:focus {
+            border-color: #0098da;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        
+        .btn-primary {
+            background-color: #0098da;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0098da;
+        }
+        
+        .section-header {
+            border-bottom: 2px solid #0098da;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        .info-container p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .total-value {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: end;
+        }
+
+        .info-loja {
+            text-align: left;
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .form-floating {
+            position: relative;
+        }
+
+        .form-floating label {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            font-size: 16px;
+            color: #999;
+            transition: all 0.2s;
+            pointer-events: none;
+        }
+
+        .form-floating input:focus + label,
+        .form-floating input:not(:placeholder-shown) + label,
+        .form-floating textarea:focus + label,
+        .form-floating textarea:not(:placeholder-shown) + label {
+            top: -20px;
+            left: 10px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .form-floating input,
+        .form-floating textarea {
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        .date-input {
+            background-image: url("https://i.postimg.cc/C5wm60WW/calendar.png");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px 20px;
+            height: 40px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        .calendar-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background-image: url("https://i.postimg.cc/C5wm60WW/calendar.png");
+            background-size: cover;
+            pointer-events: none; /* Para que o clique não seja interceptado */
+        }
+
+        #selecao {
+            font-size: 2em;
+            color: #0098da;
+            border: none;
+            outline: none;
+            -webkit-appearance: none; /* Remove a aparência padrão do select no WebKit */
+            -moz-appearance: none; /* Remove a aparência padrão do select no Firefox */
+            appearance: none; /* Remove a aparência padrão do select nos navegadores modernos */
+            background: none; /* Remove o fundo padrão */
+        }
+
+        /* Estilo adicional para melhorar a aparência */
+        #selecao-container {
+            display: inline-block;
+            position: relative;
+        }
+        
+        /* Estilo para adicionar um ícone de seta personalizado */
+        #selecao-container::after {
+            content: '▼';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #0098da;
+        }
+        
+        .header {
+            padding: 10px;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Permite que os itens se movam para a próxima linha */
+        }
+
+        @media print {
+            @page {
+                size: A2;
+            }
+            body {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                height: auto;
+                margin: 0;
+                padding: 0;
+                page-break-after: avoid;
+            }
+            
+            .info-container .form-row {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                width: 100%;
+            }
+            .info-container .form-group {
+                flex: 1;
+                margin-right: 15px;
+            }
+            .info-container .form-group:last-child {
+                margin-right: 0;
+            }
+            .info-container p {
+                margin: 0;
+            }
+            .logo-container, .info-loja {
+                flex: 1;
+            }
+            .logo-container img {
+                max-height: 200px;
+            }
+            .info-loja {
+                text-align: left;
+            }
+            .no-break {
+                page-break-inside: avoid;
+                page-break-after: avoid;
+            }
+            .btn {
+                display: none;
+            }
+            .form-row {
+                display: flex;
+                flex-wrap: nowrap;
+            }
+            .form-group label {
+                margin-bottom: 0.5em;
+            }
+            .table thead th {
+                background-color: #0098da !important;
+                color: #fff !important;
+                border: none !important;
+            }
+            .date-input {
+                background-image: url('CAMINHO_DO_SEU_ICON'); /* Coloque o caminho do ícone aqui */
+                background-repeat: no-repeat;
+                background-position: right; /* Ajuste a posição conforme necessário */
+                background-size: 20px; /* Ajuste o tamanho conforme necessário */
+                padding-right: 25px; /* Para evitar que o texto sobreponha o ícone */
+            }            
+        }
+    </style>
+</head>
+<body>        
+    <div class="container mt-4">
+        <header class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center mb-12 w-100">
+                <select style="font-size: 2em; color: #0098da; border: none; outline: none;" id="selecao" onchange="alterarTitulo(this.value)">
+                    <option style="border: none; text-align: right;" value="Orçamento">Orçamento - </option>
+                    <option style="border: none; text-align: right;" value="Pedido">Pedido - </option>
+                </select>
+                <input type="text" placeholder="Nº" class="form-control" style="font-size: 1.5rem; border:none">
+                <div class="position-relative" style="max-width: 200px;">
+                    <input type="text" class="form-control date-input" style="font-size: 1.5rem; border:none; padding-right: 30px;" placeholder="Selecione uma data" id="dataHoje">
+                </div>
+            </div>                                         
+        </header>      
+        <div class="row mb-6 logo-loga">
+            <div class="col-md-7 logo-container">
+                <a href="https://www.hidrog.com.br">
+                    <img src="https://i.postimg.cc/DZyfPc05/Brown-And-White-Simple-Universal-Sale-Coupon-Card.png" alt="Logo da Empresa" class="img-fluid" style="height: 170px;">
+                </a>
+            </div>
+            <div class="col-md-5 info-loja text-right">
+                <p style="color: #0098da;font-size: 1.5rem"><strong>HIDRO G BOMBAS SUBERMAS LTDA.</strong></p>
+                <p>CNPJ: 12.835.772/0001-22</p>
+                <p>Rua Feres Bucater 1461 - Jd. São Marco</p>
+                <p>São José do Rio Preto - SP</p>
+                <p>Telefones: (17) 3216-5760 - (17) 98132-4900</p>
+            </div>
+        </div>   
+        
+        <h2 class="section-header">Informações do Cliente</h2>
+        <div class="info-container">
+            <div class="form-row">
+                <div class="form-group col-md-6 position-relative">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="clientCNPJ" placeholder=" " required>
+                        <label for="clientCNPJ">CNPJ/CPF:</label>
+                    </div>
+                    <span class="search-icon" onclick="buscarCNPJ()">🔍</span>
+                </div>
+                <div class="form-group col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="clientName" placeholder=" " required>
+                        <label for="clientName">Nome do Cliente (Razão Social):</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="clientPhone1" placeholder=" " required>
+                        <label for="clientPhone1">Telefone 1:</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="clientPhone2" placeholder=" ">
+                        <label for="clientPhone2">Telefone 2:</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="clientPhone3" placeholder=" ">
+                        <label for="clientPhone3">Telefone 3:</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="clientAddress" placeholder=" " required>
+                        <label for="clientAddress">Endereço:</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-4 position-relative">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="clientCEP" placeholder=" " required>
+                        <label for="clientCEP">CEP:</label>
+                    </div>
+                    <span class="search-icon" onclick="buscarCEP()">🔍</span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="clientNeighborhood" placeholder=" " required>
+                        <label for="clientNeighborhood">Bairro:</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="clientCity" placeholder=" " required>
+                        <label for="clientCity">Cidade:</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="clientState" placeholder=" " required>
+                        <label for="clientState">Estado:</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-header">Itens do Orçamento</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 1%;">Item</th>
+                    <th style="width: 50%;">Descrição</th>
+                    <th style="width: 9%;">Qtd</th>
+                    <th style="width: 20%;">Valor Unit. (R$)</th>
+                    <th style="width: 20%;">Valor Total (R$)</th>
+                </tr>
+            </thead>
+            <tbody id="itemsTable">
+                <!-- Adicionando 10 produtos -->
+                <tr>
+                    <td><input type="text" class="form-control" value="1" readonly></td>
+                    <td><input type="text" class="form-control"></td>
+                    <td><input type="number" class="form-control" value="0" onchange="calcularSubtotal()"></td>
+                    <td><input type="text" class="form-control" value="0,00" oninput="formatarCampo(this)"></td>
+                    <td><input type="text" class="form-control" value="0,00" readonly></td>
+                </tr>
+                <tr></tr>
+                    <td><input type="text" class="form-control" value="2" readonly></td>
+                    <td><input type="text" class="form-control"></td>
+                    <td><input type="number" class="form-control" value="0" onchange="calcularSubtotal()"></td>
+                    <td><input type="text" class="form-control" value="0,00" oninput="formatarCampo(this)"></td>
+                    <td><input type="text" class="form-control" value="0,00" readonly></td>
+                </tr>
+                <tr></tr>
+                    <td><input type="text" class="form-control" value="3" readonly></td>
+                    <td><input type="text" class="form-control"></td>
+                    <td><input type="number" class="form-control" value="0" onchange="calcularSubtotal()"></td>
+                    <td><input type="text" class="form-control" value="0,00" oninput="formatarCampo(this)"></td>
+                    <td><input type="text" class="form-control" value="0,00" readonly></td>
+                </tr>
+                <tr></tr>
+                    <td><input type="text" class="form-control" value="4" readonly></td>
+                    <td><input type="text" class="form-control"></td>
+                    <td><input type="number" class="form-control" value="0" onchange="calcularSubtotal()"></td>
+                    <td><input type="text" class="form-control" value="0,00" oninput="formatarCampo(this)"></td>
+                    <td><input type="text" class="form-control" value="0,00" readonly></td>
+                </tr>
+                <tr></tr>
+                    <td><input type="text" class="form-control" value="5" readonly></td>
+                    <td><input type="text" class="form-control"></td>
+                    <td><input type="number" class="form-control" value="0" onchange="calcularSubtotal()"></td>
+                    <td><input type="text" class="form-control" value="0,00" oninput="formatarCampo(this)"></td>
+                    <td><input type="text" class="form-control" value="0,00" readonly></td>
+                </tr>
+                <tr></tr>
+                    <td><input type="text" class="form-control" value="6" readonly></td>
+                    <td><input type="text" class="form-control"></td>
+                    <td><input type="number" class="form-control" value="0" onchange="calcularSubtotal()"></td>
+                    <td><input type="text" class="form-control" value="0,00" oninput="formatarCampo(this)"></td>
+                    <td><input type="text" class="form-control" value="0,00" readonly></td>
+                </tr>
+                <tr></tr>
+                    <td><input type="text" class="form-control" value="7" readonly></td>
+                    <td><input type="text" class="form-control"></td>
+                    <td><input type="number" class="form-control" value="0" onchange="calcularSubtotal()"></td>
+                    <td><input type="text" class="form-control" value="0,00" oninput="formatarCampo(this)"></td>
+                    <td><input type="text" class="form-control" value="0,00" readonly></td>
+                </tr>
+                <tr></tr>
+                    <td><input type="text" class="form-control" value="8" readonly></td>
+                    <td><input type="text" class="form-control"></td>
+                    <td><input type="number" class="form-control" value="0" onchange="calcularSubtotal()"></td>
+                    <td><input type="text" class="form-control" value="0,00" oninput="formatarCampo(this)"></td>
+                    <td><input type="text" class="form-control" value="0,00" readonly></td>
+                </tr>
+                <tr></tr>
+                    <td><input type="text" class="form-control" value="9" readonly></td>
+                    <td><input type="text" class="form-control"></td>
+                    <td><input type="number" class="form-control" value="0" onchange="calcularSubtotal()"></td>
+                    <td><input type="text" class="form-control" value="0,00" oninput="formatarCampo(this)"></td>
+                    <td><input type="text" class="form-control" value="0,00" readonly></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-row" style="width: 100%;">
+            <div class="form-group col-md-4">
+                <label>Frete:</label>
+                <input type="text" class="form-control" placeholder="CIF">
+            </div>
+            <div class="form-group col-md-4">
+                <label>Desconto:</label>
+                <input type="text" class="form-control" placeholder="Desconto" oninput="formatarCampo(this)" onchange="calcularTotal()">
+            </div>
+            <div class="form-group col-md-4" style="text-align: end;">
+                <p class="font-weight-bold">Sub Total: R$ <span id="subTotal">0,00</span></p>
+                <p class="font-weight-bold" style="font-size: 1.5em">Valor Total: R$ <span id="totalValue">0,00</span></p>
+            </div>
+        </div>
+        
+        <h2 class="section-header">Informações Complementares</h2>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="warranty" placeholder=" " required>
+                    <label for="warranty">Garantia:</label>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="deliveryTime" placeholder=" " required>
+                    <label for="deliveryTime">Prazo de Entrega:</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="proposalValidity" placeholder=" " required>
+                    <label for="proposalValidity">Validade da Proposta:</label>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="paymentConditions" placeholder=" " required>
+                    <label for="paymentConditions">Condições de Pagamento:</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-floating">
+                <textarea class="form-control" id="notes" placeholder=" " rows="3" required></textarea>
+                <label for="notes">Observações:</label>
+            </div>
+        </div>
+    
+        <button type="button" id="printButton" class="btn btn-primary btn-block">Gerar e Imprimir Orçamento</button>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        function formatarCampo(campo) {
+            let valor = campo.value.replace(/\D/g, '');
+            if (valor) {
+                valor = (parseFloat(valor) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                campo.value = valor;
+            } else {
+                campo.value = '0,00';
+            }
+            calcularSubtotal();
+        }
+    
+        function calcularSubtotal() {
+            let totalGeral = 0;
+            const linhas = document.querySelectorAll('#itemsTable tr');
+        
+            linhas.forEach((linha) => {
+                const qtdInput = linha.querySelector('td:nth-child(3) input');
+                const valorUnitInput = linha.querySelector('td:nth-child(4) input');
+                
+                // Verifica se os campos existem e não estão vazios
+                if (qtdInput && valorUnitInput) {
+                    const qtd = parseFloat(qtdInput.value) || 0;
+                    const valorUnit = parseFloat(valorUnitInput.value.replace('.', '').replace(',', '.')) || 0;
+                    const valorTotal = linha.querySelector('td:nth-child(5) input');
+        
+                    const subtotal = qtd * valorUnit;
+                    if (valorTotal) {
+                        valorTotal.value = subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    }
+                    totalGeral += subtotal;
+                }
+            });
+        
+            document.getElementById('subTotal').innerText = totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            calcularTotal();
+        }
+        
+        function calcularTotal() {
+            const subtotal = parseFloat(document.getElementById('subTotal').innerText.replace('.', '').replace(',', '.')) || 0;
+            const frete = parseFloat(document.querySelector('input[placeholder="CIF"]').value.replace('.', '').replace(',', '.')) || 0;
+            const desconto = parseFloat(document.querySelector('input[placeholder="Desconto"]').value.replace('.', '').replace(',', '.')) || 0;
+            
+            const total = subtotal + frete - desconto;
+            document.getElementById('totalValue').innerText = total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        
+    
+        flatpickr(".date-input", {
+            dateFormat: "d/m/Y"
+        });
+    
+        function buscarCNPJ() {
+            const cnpj = document.getElementById('clientCNPJ').value.replace(/[^\d]+/g, '');
+        
+            if (cnpj.length !== 14) {
+                alert('CNPJ inválido. Verifique e tente novamente.');
+                return;
+            }
+        
+            const url = `https://www.receitaws.com.br/v1/cnpj/${cnpj}`;
+        
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na resposta da API. Verifique o CNPJ e tente novamente.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'ERROR') {
+                        alert('CNPJ não encontrado. Verifique se o número está correto.');
+                    } else {
+                        document.getElementById('clientName').value = data.nome || '';
+                        document.getElementById('clientAddress').value = data.logradouro || '';
+                        document.getElementById('clientNeighborhood').value = data.bairro || '';
+                        document.getElementById('clientCity').value = data.municipio || '';
+                        document.getElementById('clientState').value = data.uf || '';
+                        document.getElementById('clientCEP').value = data.cep || '';
+                    }
+                })
+                .catch(error => {
+                    alert('Erro ao buscar dados de CNPJ: ' + error.message);
+                });
+        }
+        
+    
+        function buscarCEP() {
+            const cep = document.getElementById('clientCEP').value.replace(/[^\d]+/g, '');
+    
+            if (cep.length !== 8) {
+                alert('CEP inválido. Verifique e tente novamente.');
+                return;
+            }
+    
+            const url = `https://viacep.com.br/ws/${cep}/json/`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.erro) {
+                        alert('CEP não encontrado. Verifique o número e tente novamente.');
+                    } else {
+                        document.getElementById('clientAddress').value = data.logradouro;
+                        document.getElementById('clientNeighborhood').value = data.bairro;
+                        document.getElementById('clientCity').value = data.localidade;
+                        document.getElementById('clientState').value = data.uf;
+                    }
+                })
+                .catch(error => {
+                    alert('Erro ao buscar dados de CEP: ' + error.message);
+                });
+        }
+    
+        document.getElementById('printButton').addEventListener('click', function() {
+            window.print();
+        });
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('dataHoje').value = new Date().toLocaleDateString('pt-BR');
+    
+            $('#clientPhone1, #clientPhone2, #clientPhone3').mask('(00) 0000-00009');
+        
+            $('#clientPhone1, #clientPhone2, #clientPhone3').blur(function() {
+                var phone = $(this).val().replace(/\D/g, '');
+                if (phone.length === 11) {
+                    $(this).mask('(00) 00000-0000');
+                } else {
+                    $(this).mask('(00) 0000-0000');
+                }
+            });
+    
+            $('#clientCNPJ').mask('00.000.000/0000-00');
+            $('#clientCEP').mask('00000-000');
+        });
+        
+        function salvarOrcamento() {
+            const orcamento = {
+                subtotal: document.getElementById('subTotal').innerText,
+                total: document.getElementById('totalValue').innerText,
+                itens: Array.from(document.querySelectorAll('#itemsTable tr')).map(linha => {
+                    return {
+                        quantidade: linha.querySelector('td:nth-child(3) input').value,
+                        valorUnitario: linha.querySelector('td:nth-child(4) input').value
+                    };
+                })
+            };
+        
+            let orcamentos = JSON.parse(localStorage.getItem('orcamentos')) || [];
+            orcamentos.push(orcamento);
+            localStorage.setItem('orcamentos', JSON.stringify(orcamentos));
+        
+            alert('Orçamento salvo com sucesso!');
+        }
+        
+        function carregarOrcamentos() {
+            const orcamentos = JSON.parse(localStorage.getItem('orcamentos')) || [];
+            const listaOrcamentos = document.getElementById('listaOrcamentos');
+            listaOrcamentos.innerHTML = '';
+        
+            orcamentos.forEach((orcamento, index) => {
+                const item = document.createElement('li');
+                item.textContent = `Orçamento ${index + 1}: Subtotal ${orcamento.subtotal}, Total ${orcamento.total}`;
+                item.onclick = () => carregarOrcamento(index);
+                listaOrcamentos.appendChild(item);
+            });
+        }
+        
+        function carregarOrcamento(index) {
+            const orcamentos = JSON.parse(localStorage.getItem('orcamentos'));
+            const orcamento = orcamentos[index];
+        
+            document.getElementById('subTotal').innerText = orcamento.subtotal;
+            document.getElementById('totalValue').innerText = orcamento.total;
+        
+            const linhas = document.querySelectorAll('#itemsTable tr');
+            linhas.forEach((linha, i) => {
+                if (orcamento.itens[i]) {
+                    linha.querySelector('td:nth-child(3) input').value = orcamento.itens[i].quantidade;
+                    linha.querySelector('td:nth-child(4) input').value = orcamento.itens[i].valorUnitario;
+                }
+            });
+        
+            calcularSubtotal();
+        }
+    </script>    
+</body>
+</html>
+
